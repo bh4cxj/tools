@@ -1,4 +1,5 @@
 #!/bin/bash
+# run as root
 
 ver=`awk -F: '{print $5}' /etc/system-release-cpe`
 [ $ver == 6 ] && rpm -Uvh http://mirrors.ustc.edu.cn/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
@@ -28,3 +29,18 @@ echo "set cursorline" >> ~/.vimrc
 
 # install i3
 # yum install -y i3 i3lock i3status fcitx fcitx-table fcitx-table-chinese
+
+# jump directory, like autojump
+export MARKPATH=$HOME/.marks
+function jump {
+	cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
+}
+function mark {
+	mkdir -p "$MARKPATH/" ; ln -s "$(pwd)" "$MARKPATH/$1"
+}
+function unmark {
+	rm -i "$MARKPATH/$1"
+}
+function marks {
+	ls -l "$MARKPATH" | awk '{if (NR != 1) { printf "%s\t->\t%s\n", $9,$11}}'
+}
